@@ -96,7 +96,7 @@ class SystemConfig(BaseSettings):
 
     class Config:
         """Pydantic configuration for environment variable loading."""
-        env_file = Path(__file__).parent.parent.parent / '.env'
+        env_file = Path(__file__).parent.parent / '.env'
         env_file_encoding = 'utf-8'
         case_sensitive = False
         env_nested_delimiter = '__'
