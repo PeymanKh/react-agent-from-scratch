@@ -4,11 +4,6 @@ Configuration Management Module
 Handles secure loading and validation of environment variables with support
 for local .env files and cloud deployment with GCP Secret Manager integration.
 
-Environment Variables Format:
-    - Simple settings: APP_NAME, ENVIRONMENT, DEBUG
-    - Nested settings: GCP__PROJECT_ID, DATABASE__URI, MODEL__API_KEY
-    - Read .env.example for more information
-
 Usage:
     from config.config import config
 
@@ -22,7 +17,7 @@ import logging
 from enum import Enum
 from pathlib import Path
 from pydantic_settings import BaseSettings
-from pydantic import SecretStr, Field, ValidationError, BaseModel
+from pydantic import SecretStr, Field, ValidationError
 
 
 class LogLevel(str, Enum):
@@ -96,7 +91,7 @@ class SystemConfig(BaseSettings):
 
     class Config:
         """Pydantic configuration for environment variable loading."""
-        env_file = Path(__file__).parent.parent / '.env'
+        env_file = Path(__file__).parent.parent.parent / '.env'
         env_file_encoding = 'utf-8'
         case_sensitive = False
         env_nested_delimiter = '__'
@@ -109,7 +104,7 @@ logging.basicConfig(level=logging.DEBUG, format=DEFAULT_LOG_FORMAT)
 # Load and validate configuration on module import
 try:
     config = SystemConfig()
-    logging.info(f"Configuration loaded for environment: {config.environment}")
+    logging.info(f"Configuration loaded for {config.environment} environment")
 except ValidationError as e:
     logging.error(f"Configuration validation failed: {e}")
     sys.exit(1)
