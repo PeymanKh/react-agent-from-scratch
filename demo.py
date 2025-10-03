@@ -2,11 +2,12 @@
 import logging
 
 from src.config.config import config
-from src.utils import initialize_personal_directory, initialize_developer_directory
+from src.tools import move_files, get_working_directory
 from src.config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
 
 if __name__ == "__main__":
-    initialize_developer_directory()
+    print(get_working_directory())
+    print(move_files({"root/api_documentation.pdf": "root/gaming/"}))
