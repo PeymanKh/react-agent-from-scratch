@@ -7,7 +7,9 @@ Author: Peyman Kh
 Last Edited: 03-10-2025
 """
 # Import libraries
+import re
 import os
+import ast
 import shutil
 import logging
 from pathlib import Path
@@ -93,3 +95,37 @@ def initialize_developer_directory():
 
     except Exception as e:
         logger.error(f"Failed to initialize working directory: {e}")
+
+
+def extract_tool(llm_response: str) -> dict:
+    """
+    This function parses the LLM response and returns the tool name and arguments.
+
+    Args:
+        llm_response (str): The LLM response string.
+
+    Returns:
+        dict: A dictionary containing the tool name and arguments.
+    """
+    # Regex pattern to extract tool name and arguments
+    pattern = r'Tool:\s*(\w+)\((.*?)\)'
+
+    # Search for the pattern in the response
+    match = re.search(pattern, llm_response, re.DOTALL)
+
+    if not match:
+        return {"tool": None, "args": None}
+
+    tool_name = match.group(1).strip()
+    tool_args = match.group(2).strip()
+
+    # Handle empty arguments (no args case)
+    if not tool_args:
+        return {"tool": tool_name, "args": None}
+
+    try:
+        parsed_args = ast.literal_eval(tool_args)
+        return {"tool": tool_name, "args": parsed_args}
+    except (ValueError, SyntaxError) as e:
+        logger.error(f"Could not parse arguments: {e}")
+        return {tool_name: None, "args": None}

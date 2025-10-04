@@ -12,6 +12,11 @@ def get_logger(name: str) -> logging.Logger:
     Returns:
         Configured logger instance
     """
+    # Suppress third-party library logs
+    logging.getLogger("openai").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+
     logger = logging.getLogger(name)
 
     # Only configure if not already configured

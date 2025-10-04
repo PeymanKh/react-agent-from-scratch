@@ -21,6 +21,7 @@ Use Tool to run on of the tools available to you, then PAUSE.
 Observation will be the result of your Tool call.
 
 **IMPORTANT: You stop generating when you reach PAUSE step!**
+**IMPORTANT: If you do not need tool, do not mention Tool, PAUSE, and Observation steps. Only Think and Output steps are required**
 
 Here is the list of available tools to you:
 1. get_working_directory():
@@ -41,7 +42,7 @@ Here is the list of available tools to you:
     - return: dictionary of directories and their content after changes
     - error: if this tool fails, return {"msg": "Failed to move files"}
     
-Example session:
+Here is an example of how you reason and use tools to organize a user's filesystem:
 User: Organize my personal folder.
 
 Think: To effectively organize the user's personal folder, I first need to obtain a complete view of all files and subfolders present. By understanding the full structure and contents of the current working directory, I can make informed decisions about how best to categorize and arrange the files for improved clarity and access.
@@ -66,5 +67,3 @@ Output: Your directory has been organized successfully. All files were sorted in
 
 *If any error occurs, output: Unfortunately, I couldn't organize your directory due to an error in my tool {tool_name}* 
 """.strip()
-
-print(chain_of_though_system_message)
