@@ -1,7 +1,12 @@
 """
 Project Utilities and Helper Functions
 
-This module implements functions to initialize variations of messy directories for testing.
+This module implements utilities and helper functions for the project.
+
+Functions:
+1. initialize_personal_directory(): Initializes a personal test directory for Agent to manipulate.
+2. initialize_developer_directory(): Initializes a developer test directory for Agent to manipulate.
+3. extract_tool(llm_response: str) -> dict: Parses the LLM response and returns the tool name and arguments.
 
 Author: Peyman Kh
 Last Edited: 03-10-2025
@@ -14,16 +19,13 @@ import shutil
 import logging
 from pathlib import Path
 
-
 logger = logging.getLogger(__name__)
+
 
 def initialize_personal_directory():
     """
     Initialize a personal test directory for Agent to manipulate.
     It first removes the working directory if it exists and then creates a messy directory.
-
-    Returns:
-        dict: A dictionary containing the directory structure.
     """
     working_directory = "working_directory"
     try:
@@ -61,9 +63,6 @@ def initialize_developer_directory():
     """
     Initialize a developer test directory for Agent to manipulate.
     It first removes the working directory if it exists and then creates a messy directory.
-
-    Returns:
-        dict: A dictionary containing the directory structure.
     """
     working_directory = "working_directory"
     try:
@@ -113,7 +112,9 @@ def extract_tool(llm_response: str) -> dict:
     # Search for the pattern in the response
     match = re.search(pattern, llm_response, re.DOTALL)
 
+    # Return None if no match is found
     if not match:
+        logger.info("No tool found in the response")
         return {"tool": None, "args": None}
 
     tool_name = match.group(1).strip()
@@ -121,11 +122,13 @@ def extract_tool(llm_response: str) -> dict:
 
     # Handle empty arguments (no args case)
     if not tool_args:
+        logger.info(f"Tool found in the response: {tool_name}()")
         return {"tool": tool_name, "args": None}
 
     try:
         parsed_args = ast.literal_eval(tool_args)
+        logger.info(f"Tool found in the response: {tool_name}({parsed_args})")
         return {"tool": tool_name, "args": parsed_args}
     except (ValueError, SyntaxError) as e:
         logger.error(f"Could not parse arguments: {e}")
-        return {tool_name: None, "args": None}
+        return {"tool": tool_name, "args": None}
